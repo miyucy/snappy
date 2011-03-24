@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
     "VERSION",
     "ext/extconf.rb",
     "ext/snappy.cc",
+    "snappy.gemspec",
     "spec/snappy_spec.rb",
     "spec/spec_helper.rb"
   ]
