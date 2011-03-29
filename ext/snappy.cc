@@ -37,6 +37,9 @@ void Init_snappy()
     rb_define_singleton_method(rb_mSnappy, "deflate", (VALUE (*)(...))snappy_deflate, 1);
     rb_define_singleton_method(rb_mSnappy, "inflate", (VALUE (*)(...))snappy_inflate, 1);
 
+    rb_define_singleton_method(rb_mSnappy, "compress", (VALUE (*)(...))snappy_deflate, 1);
+    rb_define_singleton_method(rb_mSnappy, "uncompress", (VALUE (*)(...))snappy_inflate, 1);
+
     i_to_s = rb_intern("to_s");
 }
 }
