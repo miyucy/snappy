@@ -16,7 +16,7 @@ unless have_library 'snappy'
     $defs << '-DHAVE_BUILTIN_CTZ'
   end
 
-  dst = File.expand_path Dir.pwd
+  dst = File.dirname File.expand_path __FILE__
 
   ver = "1.0.1"
   src = "snappy-#{ver}"
