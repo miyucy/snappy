@@ -46,6 +46,7 @@ snappy.h
   }.each { |ptn, str| hdr.gsub! ptn, str }
   File.open(File.join(dst, 'snappy-stubs-public.h'), 'wb'){ |f| f.write hdr }
 
+  FileUtils.touch 'config.h'
 end
 
 have_library 'stdc++'
