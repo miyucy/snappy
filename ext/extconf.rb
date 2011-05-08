@@ -37,7 +37,7 @@ unless have_library 'snappy'
   tar = 'tar'
   tar = 'gnutar' if find_executable 'gnutar'
 
-  ver = "1.0.1"
+  ver = "1.0.2"
   src = "snappy-#{ver}"
 
   FileUtils.rm_rf File.join dst, src
@@ -68,7 +68,7 @@ snappy.h
     %r'#if @ac_cv_have_stddef_h@' => '#ifdef HAVE_STDDEF_H',
     %r'@SNAPPY_MAJOR@'            => '1',
     %r'@SNAPPY_MINOR@'            => '0',
-    %r'@SNAPPY_PATCHLEVEL@'       => '1',
+    %r'@SNAPPY_PATCHLEVEL@'       => '2',
   }.each { |ptn, str| hdr.gsub! ptn, str }
   File.open(File.join(dst, 'snappy-stubs-public.h'), 'wb'){ |f| f.write hdr }
 
