@@ -2,54 +2,64 @@
 #include "snappy.h"
 
 static VALUE rb_mSnappy;
+static VALUE rb_eSnappy;
 
 static VALUE
 snappy_deflate(int argc, VALUE *argv, VALUE self)
 {
     VALUE src, dst;
-    snappy::string output;
     size_t  output_length;
 
     rb_scan_args(argc, argv, "11", &src, &dst);
-    src = StringValue(src);
+    StringValue(src);
 
-    output_length = snappy::Compress(RSTRING_PTR(src), RSTRING_LEN(src), &output);
+    output_length = snappy::MaxCompressedLength(RSTRING_LEN(src));
+
     if (NIL_P(dst)) {
-        return rb_str_new(output.data(), output_length);
+        dst = rb_str_new(NULL, output_length);
     } else {
     	StringValue(dst);
     	rb_str_resize(dst, output_length);
-    	memcpy(RSTRING_PTR(dst), output.data(), output_length);
     }
+
+    snappy::RawCompress(RSTRING_PTR(src), RSTRING_LEN(src), RSTRING_PTR(dst), &output_length);
+    rb_str_resize(dst, output_length);
+
+    return dst;
 }
 
 static VALUE
 snappy_inflate(int argc, VALUE *argv, VALUE self)
 {
     VALUE src, dst;
-    snappy::string output;
+    size_t output_length;
 
     rb_scan_args(argc, argv, "11", &src, &dst);
-    src = StringValue(src);
+    StringValue(src);
 
-    if (!snappy::IsValidCompressedBuffer(RSTRING_PTR(src), RSTRING_LEN(src)) ||
-        !snappy::Uncompress(RSTRING_PTR(src), RSTRING_LEN(src), &output)) {
-        rb_raise(rb_eRuntimeError, "Couldn't inflate");
+    if (!snappy::GetUncompressedLength(RSTRING_PTR(src), RSTRING_LEN(src), &output_length)) {
+        rb_raise(rb_eSnappy, "snappy::GetUncompressedLength");
     }
 
     if (NIL_P(dst)) {
-        return rb_str_new(output.data(), output.size());
+        dst = rb_str_new(NULL, output_length);
     } else {
     	StringValue(dst);
-    	rb_str_resize(dst, output.size());
-    	memcpy(RSTRING_PTR(dst), output.data(), output.size());
+    	rb_str_resize(dst, output_length);
     }
+
+    if (!snappy::RawUncompress(RSTRING_PTR(src), RSTRING_LEN(src), RSTRING_PTR(dst))) {
+        rb_raise(rb_eSnappy, "snappy::RawUncompress");
+    }
+
+    return dst;
 }
 
 extern "C" {
 void Init_snappy()
 {
     rb_mSnappy = rb_define_module("Snappy");
+    rb_eSnappy = rb_define_class_under(rb_mSnappy, "Error", rb_eStandardError);
     rb_define_singleton_method(rb_mSnappy, "deflate", (VALUE (*)(...))snappy_deflate, -1);
     rb_define_singleton_method(rb_mSnappy, "inflate", (VALUE (*)(...))snappy_inflate, -1);
 
