@@ -20,11 +20,14 @@ def try_configure
   have_header 'stdlib.h'
   have_header 'strings.h'
   have_header 'string.h'
+  have_header 'sys/byteswap.h'
+  have_header 'sys/endian.h'
   have_header 'sys/mman.h'
+  have_header 'sys/resource.h'
   have_header 'sys/stat.h'
   have_header 'sys/types.h'
-  have_header 'sys/resource.h'
   have_header 'unistd.h'
+  have_header 'windows.h'
 
   if try_run 'int main(int argc, char** argv){ int i = 1; return *((char*)&i); }'
     $defs << '-DWORDS_BIGENDIAN'
@@ -37,7 +40,7 @@ unless have_library 'snappy'
   tar = 'tar'
   tar = 'gnutar' if find_executable 'gnutar'
 
-  ver = "1.0.2"
+  ver = "1.0.4"
   src = "snappy-#{ver}"
 
   FileUtils.rm_rf File.join dst, src
@@ -51,6 +54,8 @@ unless have_library 'snappy'
 
   %w(
 config.h
+snappy-c.cc
+snappy-c.h
 snappy-internal.h
 snappy-sinksource.cc
 snappy-sinksource.h
@@ -68,7 +73,7 @@ snappy.h
     %r'#if @ac_cv_have_stddef_h@' => '#ifdef HAVE_STDDEF_H',
     %r'@SNAPPY_MAJOR@'            => '1',
     %r'@SNAPPY_MINOR@'            => '0',
-    %r'@SNAPPY_PATCHLEVEL@'       => '2',
+    %r'@SNAPPY_PATCHLEVEL@'       => '4',
   }.each { |ptn, str| hdr.gsub! ptn, str }
   File.open(File.join(dst, 'snappy-stubs-public.h'), 'wb'){ |f| f.write hdr }
 
