@@ -28,7 +28,11 @@ Gem::Specification.new do |s|
     "VERSION",
     "ext/api.cc",
     "ext/extconf.rb",
+    "lib/snappy/reader.rb",
+    "lib/snappy/writer.rb",
     "snappy.gemspec",
+    "spec/snappy/reader_spec.rb",
+    "spec/snappy/writer_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/miyucy/snappy"
