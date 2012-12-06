@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require 'rbconfig'
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -8,6 +9,8 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 require 'rake'
+
+DLEXT = RbConfig::CONFIG['DLEXT']
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
@@ -47,4 +50,18 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "snappy #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('ext/**/*.cc')
+end
+
+task :spec => "ext/snappy.#{DLEXT}"
+
+file "ext/snappy.#{DLEXT}" => Dir.glob("ext/*{.rb,.c}") do
+  Dir.chdir("ext") do
+     ruby "extconf.rb"
+     sh "make"
+  end
+  cp "ext/snappy.#{DLEXT}", "lib"
+end
+
+task :clean do
+  rm_rf(["ext/snappy.#{DLEXT}", "lib/snappy.#{DLEXT}", "ext/mkmf.log", "ext/config.h", "ext/api.o", "ext/Makefile", "ext/snappy.cc", "ext/snappy.h", "ext/snappy.o"] + Dir["ext/snappy-*"])
 end
