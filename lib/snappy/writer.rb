@@ -7,7 +7,7 @@ module Snappy
 
     attr_reader :io, :block_size
 
-    def initialize io, block_size = DEFAULT_BLOCK_SIZE
+    def initialize(io, block_size = DEFAULT_BLOCK_SIZE)
       @block_size = block_size
       @buffer = ""
       @io = io
@@ -19,7 +19,7 @@ module Snappy
       end
     end
 
-    def << msg
+    def <<(msg)
       @buffer << msg.to_s
       dump! if @buffer.size > @block_size
     end

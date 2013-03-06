@@ -2,7 +2,7 @@ module Snappy
   class Reader
     attr_reader :io, :magic, :default_version, :minimum_compatible_version
 
-    def initialize io
+    def initialize(io)
       @io = io
       @io.set_encoding Encoding::ASCII_8BIT unless RUBY_VERSION =~ /^1\.8/
       read_header!
@@ -40,7 +40,7 @@ module Snappy
     private
 
     def read_header!
-      magic_byte = @io.readchar()
+      magic_byte = @io.readchar
       @io.ungetc(magic_byte)
 
       if @io.length >= 16 && magic_byte == Snappy::Writer::MAGIC[0]
