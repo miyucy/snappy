@@ -63,9 +63,14 @@ void Init_snappy()
     rb_define_singleton_method(rb_mSnappy, "deflate", (VALUE (*)(...))snappy_deflate, -1);
     rb_define_singleton_method(rb_mSnappy, "inflate", (VALUE (*)(...))snappy_inflate, -1);
 
-    rb_define_singleton_method(rb_mSnappy, "compress", (VALUE (*)(...))snappy_deflate, -1);
-    rb_define_singleton_method(rb_mSnappy, "uncompress", (VALUE (*)(...))snappy_inflate, -1);
+    VALUE rb_mSnappy_singleton = rb_singleton_class(rb_mSnappy);
 
+    rb_define_alias(rb_mSnappy_singleton, "compress", "deflate");
+    rb_define_alias(rb_mSnappy_singleton, "load", "deflate");
+
+    rb_define_alias(rb_mSnappy_singleton, "uncompress", "inflate");
+    rb_define_alias(rb_mSnappy_singleton, "dump", "inflate");
+    
     rb_require("snappy/writer");
     rb_require("snappy/reader");
 }
