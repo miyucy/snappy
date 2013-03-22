@@ -1,6 +1,10 @@
 module Snappy
   class Writer
-    MAGIC = "\202SNAPPY\000"
+    if RUBY_VERSION[0..2] == '1.8'
+      MAGIC = "\x82SNAPPY\x0"
+    else
+      MAGIC = "\x82SNAPPY\x0".force_encoding Encoding::ASCII_8BIT
+    end
     DEFAULT_VERSION = 1
     MINIMUM_COMPATIBLE_VERSION = 1
     DEFAULT_BLOCK_SIZE = 32 * 1024
