@@ -15,7 +15,7 @@ describe Snappy do
     [
      [:deflate,  :inflate],
      [:compress, :uncompress],
-     [:load,     :dump],
+     [:dump,     :load],
     ].each do |(i, o)|
       Snappy.__send__(o, (Snappy.__send__ i,  s)).must_equal(s)
       eval %{Snappy.#{o}(Snappy.#{i} s).must_equal(s)}
