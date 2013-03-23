@@ -9,4 +9,16 @@ describe Snappy do
     s = Array.new(1024){T.sample}.join
     Snappy.inflate(Snappy.deflate s).must_equal(s)
   end
+
+  it "well done (pair)" do
+    s = Array.new(1024){T.sample}.join
+    [
+     [:deflate,  :inflate],
+     [:compress, :uncompress],
+     [:load,     :dump],
+    ].each do |(i, o)|
+      Snappy.__send__(o, (Snappy.__send__ i,  s)).must_equal(s)
+      eval %{Snappy.#{o}(Snappy.#{i} s).must_equal(s)}
+    end
+  end
 end
