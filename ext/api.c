@@ -88,10 +88,10 @@ void Init_snappy()
     VALUE rb_mSnappy_singleton = rb_singleton_class(rb_mSnappy);
 
     rb_define_alias(rb_mSnappy_singleton, "compress", "deflate");
-    rb_define_alias(rb_mSnappy_singleton, "load", "deflate");
+    rb_define_alias(rb_mSnappy_singleton, "dump", "deflate");
 
     rb_define_alias(rb_mSnappy_singleton, "uncompress", "inflate");
-    rb_define_alias(rb_mSnappy_singleton, "dump", "inflate");
+    rb_define_alias(rb_mSnappy_singleton, "load", "inflate");
 
     rb_require("snappy/writer");
     rb_require("snappy/reader");
