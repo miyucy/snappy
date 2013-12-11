@@ -1,5 +1,6 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
+require "rbconfig"
 
 Rake::TestTask.new do |t|
   t.warning = true
@@ -8,7 +9,6 @@ end
 
 if defined?(JRUBY_VERSION)
   require 'ant'
-  require 'rbconfig'
 
   directory 'ext/java/build'
 
@@ -49,8 +49,6 @@ if defined?(JRUBY_VERSION)
   task :test => 'lib/snappy_ext.jar'
   task :build => 'lib/snappy_ext.jar'
 else
-  require "rbconfig"
-
   DLEXT = RbConfig::CONFIG["DLEXT"]
 
   file "ext/snappy_ext.#{DLEXT}" => Dir.glob("ext/*{.rb,.c}") do
