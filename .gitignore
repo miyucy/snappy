@@ -21,3 +21,4 @@ ext/config.h
 ext/*.o
 ext/*.log
 ext/snappy*
+ext/java/build
