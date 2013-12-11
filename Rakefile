@@ -18,7 +18,7 @@ if defined?(JRUBY_VERSION)
 
     ant.path id: 'compile.class.path' do
       pathelement location: File.join(RbConfig::CONFIG['prefix'], 'lib', 'jruby.jar')
-      $LOAD_PATH.flat_map { |path| p path; Dir[File.join(path, '**', '*.jar')] }.each do |jar|
+      $LOAD_PATH.flat_map { |path| Dir[File.join(path, '**', '*.jar')] }.each do |jar|
         pathelement location: jar
       end
     end
