@@ -15,3 +15,10 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+lib/snappy_ext.*
+ext/Makefile
+ext/config.h
+ext/*.o
+ext/*.log
+ext/snappy*
+ext/java/build

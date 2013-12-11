@@ -1,7 +1,7 @@
 require 'mkmf'
 require 'fileutils'
 
-unless have_library 'snappy'
+unless have_library 'snappy_ext'
   dst = File.dirname File.expand_path __FILE__
 
   tar = 'tar'
@@ -36,4 +36,4 @@ snappy.h
   end
 end
 
-create_makefile 'snappy'
+create_makefile 'snappy_ext'
