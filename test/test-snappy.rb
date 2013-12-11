@@ -1,5 +1,5 @@
-require "minitest/spec"
 require "minitest/autorun"
+require "minitest/spec"
 require "snappy"
 
 describe Snappy do
