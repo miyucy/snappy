@@ -7,7 +7,7 @@ unless have_library 'snappy_ext'
   tar = 'tar'
   tar = 'gnutar' if find_executable 'gnutar'
 
-  ver = "1.1.0"
+  ver = "1.1.1"
   src = "snappy-#{ver}"
 
   FileUtils.rm_rf File.join dst, src
