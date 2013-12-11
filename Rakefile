@@ -21,6 +21,7 @@ end
 
 if defined?(JRUBY_VERSION)
   require 'ant'
+  require 'rbconfig'
 
   directory 'ext/java/build'
 
@@ -29,7 +30,7 @@ if defined?(JRUBY_VERSION)
     ant.property name: 'build.dir', value: 'ext/java/build'
 
     ant.path id: 'compile.class.path' do
-      pathelement location: File.join(ENV['MY_RUBY_HOME'], 'lib', 'jruby.jar')
+      pathelement location: File.join(RbConfig::CONFIG['prefix'], 'lib', 'jruby.jar')
       $LOAD_PATH.flat_map { |path| p path; Dir[File.join(path, '**', '*.jar')] }.each do |jar|
         pathelement location: jar
       end
