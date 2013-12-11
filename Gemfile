@@ -1,9 +1,4 @@
 source 'https://rubygems.org'
 
-platforms :mri do
-  gemspec name: 'snappy'
-end
-
-platforms :jruby do
-  gemspec name: 'snappy-jruby'
-end
+# Specify your gem's dependencies in snappy.gemspec
+gemspec
