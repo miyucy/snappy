@@ -2,7 +2,17 @@ require "bundler/setup"
 require "bundler/gem_helper"
 require "rake/testtask"
 
-Bundler::GemHelper.install_tasks(name: 'snappy')
+namespace :mri do
+  Bundler::GemHelper.install_tasks(name: 'snappy')
+end
+
+namespace :jruby do
+  Bundler::GemHelper.install_tasks(name: 'snappy-jruby')
+  task :build => 'lib/snappy_ext.jar'
+end
+
+task :build => ['mri:build', 'jruby:build']
+task :release => ['mri:release', 'jruby:release']
 
 Rake::TestTask.new do |t|
   t.warning = true
