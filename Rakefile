@@ -48,7 +48,7 @@ if defined?(JRUBY_VERSION)
   end
 
   task :test => 'lib/snappy_ext.jar'
-  task :build => 'lib/snappy_ext.jar'
+  task :build => [:clean, 'lib/snappy_ext.jar']
 else
   DLEXT = RbConfig::CONFIG["DLEXT"]
 
