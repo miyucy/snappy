@@ -4,20 +4,20 @@ require "rbconfig"
 
 DLEXT = RbConfig::CONFIG["DLEXT"]
 
-file "ext/snappy.#{DLEXT}" => Dir.glob("ext/*{.rb,.c}") do
+file "ext/snappy_ext.#{DLEXT}" => Dir.glob("ext/*{.rb,.c}") do
   Dir.chdir("ext") do
      ruby "extconf.rb"
      sh "make"
   end
-  cp "ext/snappy.#{DLEXT}", "lib"
+  cp "ext/snappy_ext.#{DLEXT}", "lib/snappy_ext.#{DLEXT}"
 end
 
 task :clean do
-  rm_rf(["ext/snappy.#{DLEXT}", "lib/snappy.#{DLEXT}", "ext/mkmf.log", "ext/config.h", "ext/api.o", "ext/Makefile", "ext/snappy.cc", "ext/snappy.h", "ext/snappy.o"] + Dir["ext/snappy-*"])
+  rm_rf(["ext/snappy_ext.#{DLEXT}", "lib/snappy_ext.#{DLEXT}", "ext/mkmf.log", "ext/config.h", "ext/api.o", "ext/Makefile", "ext/snappy.cc", "ext/snappy.h", "ext/snappy.o"] + Dir["ext/snappy-*"])
 end
 
 Rake::TestTask.new do |t|
   t.warning = true
   t.verbose = true
 end
-task :test => "ext/snappy.#{DLEXT}"
+task :test => "ext/snappy_ext.#{DLEXT}"

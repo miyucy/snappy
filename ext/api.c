@@ -78,7 +78,7 @@ snappy_inflate(int argc, VALUE *argv, VALUE self)
     return dst;
 }
 
-void Init_snappy()
+void Init_snappy_ext()
 {
     rb_mSnappy = rb_define_module("Snappy");
     rb_eSnappy = rb_define_class_under(rb_mSnappy, "Error", rb_eStandardError);
@@ -92,7 +92,4 @@ void Init_snappy()
 
     rb_define_alias(rb_mSnappy_singleton, "uncompress", "inflate");
     rb_define_alias(rb_mSnappy_singleton, "load", "inflate");
-
-    rb_require("snappy/writer");
-    rb_require("snappy/reader");
-}
+  }
