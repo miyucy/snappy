@@ -45,11 +45,27 @@ describe Snappy::Reader do
     it "should inflate with a magic header" do
       subject.read.must_equal "HelloWorld" * 10
     end
+
+    it "should not receive `length' in eaching" do
+      length = MiniTest::Mock.new.expect(:call, 0)
+      @buffer.stub(:length, length) do
+        subject.read
+      end
+      -> { length.verify }.must_raise MockExpectationError
+    end
   end
 
   describe :io do
     it "should be a constructor argument" do
       subject.io.must_equal @buffer
+    end
+
+    it "should not receive `length' in initializing" do
+      length = MiniTest::Mock.new.expect(:call, 0)
+      @buffer.stub(:length, length) do
+        Snappy::Reader.new @buffer
+      end
+      -> { length.verify }.must_raise MockExpectationError
     end
   end
 

@@ -11,8 +11,12 @@ module Snappy
 
     def each
       until @io.eof?
-        size = @chunked ? @io.read(4).unpack("N").first : @io.length
-        yield Snappy.inflate(@io.read(size)) if block_given?
+        if @chunked
+          size = @io.read(4).unpack('N').first
+          yield Snappy.inflate(@io.read(size)) if block_given?
+        else
+          yield Snappy.inflate @io.read if block_given?
+        end
       end
     end
 
@@ -40,13 +44,12 @@ module Snappy
     private
 
     def read_header!
-      magic_byte = @io.readchar
-      @io.ungetc(magic_byte)
-
-      if @io.length >= 16 && magic_byte == Snappy::Writer::MAGIC[0]
-        @magic, @default_version, @minimum_compatible_version = @io.read(16).unpack("a8NN")
+      header = @io.read Snappy::Writer::MAGIC.length
+      if header.length == Snappy::Writer::MAGIC.length && header == Snappy::Writer::MAGIC
+        @magic, @default_version, @minimum_compatible_version = header, *@io.read(8).unpack('NN')
         @chunked = true
       else
+        @io.rewind
         @chunked = false
       end
     end
