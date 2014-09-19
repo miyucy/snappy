@@ -1,7 +1,12 @@
 require 'mkmf'
 require 'fileutils'
 
-unless have_library 'snappy_ext'
+if have_library 'snappy'
+  append_library $libs, 'snappy'
+elsif have_library 'snappy_ext'
+  append_library $libs, 'snappy_ext'
+else
+  # Download the snappy source code if the shared library is not available.
   dst = File.dirname File.expand_path __FILE__
 
   tar = 'tar'
