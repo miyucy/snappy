@@ -2,6 +2,7 @@ require "bundler/setup"
 require "bundler/gem_tasks"
 require "rake/testtask"
 require "rbconfig"
+DLEXT = RbConfig::CONFIG['DLEXT']
 
 Rake::TestTask.new do |t|
   t.warning = true
@@ -33,12 +34,6 @@ if defined?(JRUBY_VERSION)
     end
   end
 
-  desc 'Clean up build artifacts'
-  task :clean do
-    rm_rf 'ext/java/build'
-    rm_rf 'lib/snappy_ext.jar'
-  end
-
   desc 'Package the jar'
   file 'lib/snappy_ext.jar' => :compile do |t|
     ant.jar destfile: 'lib/snappy_ext.jar', basedir: '${build.dir}' do
@@ -50,19 +45,23 @@ if defined?(JRUBY_VERSION)
   task :test => 'lib/snappy_ext.jar'
   task :build => [:clean, 'lib/snappy_ext.jar']
 else
-  DLEXT = RbConfig::CONFIG["DLEXT"]
-
   file "ext/snappy_ext.#{DLEXT}" => Dir.glob("ext/*{.rb,.c}") do
     Dir.chdir("ext") do
-       ruby "extconf.rb"
-       sh "make"
+      ruby "extconf.rb"
+      sh "make"
     end
     cp "ext/snappy_ext.#{DLEXT}", "lib/snappy_ext.#{DLEXT}"
   end
 
-  task :clean do
-    rm_rf(["ext/snappy_ext.#{DLEXT}", "lib/snappy_ext.#{DLEXT}", "ext/mkmf.log", "ext/config.h", "ext/api.o", "ext/Makefile", "ext/snappy.cc", "ext/snappy.h", "ext/snappy.o"] + Dir["ext/snappy-*"])
-  end
 
   task :test => "ext/snappy_ext.#{DLEXT}"
 end
+
+desc 'Clean up build artifacts'
+task :clean do
+  rm_rf 'ext/java/build'
+  rm_rf 'lib/snappy_ext.jar'
+  rm_rf(["ext/snappy_ext.#{DLEXT}", "lib/snappy_ext.#{DLEXT}", 'ext/mkmf.log', 'ext/config.h', 'ext/api.o', 'ext/Makefile', 'ext/snappy.cc', 'ext/snappy.h', 'ext/snappy.o'] + Dir['ext/snappy-*'])
+end
+
+task :default => :test
