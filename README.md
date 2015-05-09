@@ -1,6 +1,16 @@
 # Snappy
 
-see http://code.google.com/p/snappy
+see https://github.com/google/snappy
+
+## Preparation
+
+Use libsnappy
+
+    $ brew install snappy
+
+Or
+
+    $ brew install autoconf automake libtool
 
 ## Installation
 
