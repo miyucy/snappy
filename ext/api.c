@@ -21,7 +21,7 @@ static VALUE
 snappy_deflate(int argc, VALUE *argv, VALUE self)
 {
     VALUE src, dst;
-    size_t  output_length;
+    size_t output_length;
     snappy_status result;
 
     rb_scan_args(argc, argv, "11", &src, &dst);
@@ -37,12 +37,12 @@ snappy_deflate(int argc, VALUE *argv, VALUE self)
     }
 
     result = snappy_compress(RSTRING_PTR(src), RSTRING_LEN(src), RSTRING_PTR(dst), &output_length);
-    if (result == SNAPPY_OK) {
-        rb_str_resize(dst, output_length);
-        return dst;
-    } else {
+    if (result != SNAPPY_OK) {
         return snappy_raise(result);
     }
+
+    rb_str_resize(dst, output_length);
+    return dst;
 }
 
 static VALUE
@@ -72,24 +72,39 @@ snappy_inflate(int argc, VALUE *argv, VALUE self)
         return snappy_raise(result);
     }
 
-    StringValue(dst);
     rb_str_resize(dst, output_length);
-
     return dst;
+}
+
+static VALUE
+snappy_valid_p(VALUE self, VALUE str)
+{
+    snappy_status result;
+
+    StringValue(str);
+    result = snappy_validate_compressed_buffer(RSTRING_PTR(str), RSTRING_LEN(str));
+    if (result == SNAPPY_OK) {
+        return Qtrue;
+    } else {
+        return Qfalse;
+    }
 }
 
 void Init_snappy_ext()
 {
+    VALUE rb_mSnappy_singleton;
+
     rb_mSnappy = rb_define_module("Snappy");
     rb_eSnappy = rb_define_class_under(rb_mSnappy, "Error", rb_eStandardError);
     rb_define_singleton_method(rb_mSnappy, "deflate", snappy_deflate, -1);
     rb_define_singleton_method(rb_mSnappy, "inflate", snappy_inflate, -1);
+    rb_define_singleton_method(rb_mSnappy, "valid?",  snappy_valid_p, 1);
 
-    VALUE rb_mSnappy_singleton = rb_singleton_class(rb_mSnappy);
+    rb_mSnappy_singleton = rb_singleton_class(rb_mSnappy);
 
     rb_define_alias(rb_mSnappy_singleton, "compress", "deflate");
     rb_define_alias(rb_mSnappy_singleton, "dump", "deflate");
 
     rb_define_alias(rb_mSnappy_singleton, "uncompress", "inflate");
     rb_define_alias(rb_mSnappy_singleton, "load", "inflate");
-  }
+}
