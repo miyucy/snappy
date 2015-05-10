@@ -1,4 +1,4 @@
-# Snappy
+# Snappy ![](https://travis-ci.org/miyucy/snappy.svg?branch=master)
 
 see https://github.com/google/snappy
 
