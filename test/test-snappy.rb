@@ -24,6 +24,7 @@ describe Snappy do
 
   describe '#deflate' do
     it 'can pass buffer' do
+      skip 'cannot pass buffer in jruby' if defined? JRUBY_VERSION
       s = 'a' * 1024
       d = ' ' * 1024
       r = Snappy.deflate(s, d)
@@ -33,6 +34,7 @@ describe Snappy do
 
   describe '#inflate' do
     it 'can pass buffer' do
+      skip 'cannot pass buffer in jruby' if defined? JRUBY_VERSION
       s = Snappy.deflate('a' * 1024)
       d = ' ' * 1024
       r = Snappy.inflate(s, d)
@@ -42,11 +44,13 @@ describe Snappy do
 
   describe '#valid?' do
     it 'return true when passed deflated data' do
+      skip 'snappy-jars does not have valid?' if defined? JRUBY_VERSION
       d = Snappy.deflate(Array.new(1024){T.sample}.join)
       Snappy.valid?(d).must_equal true
     end
 
     it 'return false when passed invalid data' do
+      skip 'snappy-jars does not have valid?' if defined? JRUBY_VERSION
       d = Snappy.deflate(Array.new(1024){T.sample}.join).reverse
       Snappy.valid?(d).must_equal false
     end
