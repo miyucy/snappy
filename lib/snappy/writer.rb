@@ -39,6 +39,10 @@ module Snappy
 
     alias_method :flush, :dump!
 
+    def close
+      @io.close
+    end
+
     private
 
     def write_header!
