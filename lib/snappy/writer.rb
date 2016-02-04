@@ -12,7 +12,8 @@ module Snappy
     def initialize(io, block_size = DEFAULT_BLOCK_SIZE)
       @block_size = block_size
       @buffer = String.new
-      @io = Snappy.set_encoding io
+      @io = io
+      @io.set_encoding Encoding::ASCII_8BIT
       write_header!
       if block_given?
         yield self

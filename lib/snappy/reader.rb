@@ -5,7 +5,8 @@ module Snappy
     attr_reader :io, :magic, :default_version, :minimum_compatible_version
 
     def initialize(io)
-      @io = Snappy.set_encoding io
+      @io = io
+      @io.set_encoding Encoding::ASCII_8BIT
       read_header!
       yield self if block_given?
     end
