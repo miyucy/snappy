@@ -28,6 +28,8 @@ module Snappy
       dump! if @buffer.size > @block_size
     end
 
+    alias_method :write, :<<
+
     def dump!
       compressed = Snappy.deflate(@buffer)
       @io << [compressed.size, compressed].pack("Na#{compressed.size}")
