@@ -6,7 +6,7 @@ def patch_autogen
   File.write('autogen.sh', File.read('autogen.sh').gsub(/libtoolize/, 'glibtoolize'))
 end
 
-unless have_library 'snappy'
+unless pkg_config('libsnappy') || have_library('snappy')
   # build vendor/snappy
   pwd = File.dirname File.expand_path __FILE__
   dir = File.join pwd, '..', 'vendor', 'snappy'
