@@ -1,4 +1,5 @@
 require 'snappy/shim'
+require 'snappy/writer'
 
 module Snappy
   class Reader
@@ -29,7 +30,7 @@ module Snappy
       @buff.string
     end
 
-    def each_line(sep_string=$/)
+    def each_line(sep_string = $/)
       last = ""
       each do |chunk|
         chunk = last + chunk
