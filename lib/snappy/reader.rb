@@ -1,10 +1,12 @@
+require 'snappy/shim'
+
 module Snappy
   class Reader
     attr_reader :io, :magic, :default_version, :minimum_compatible_version
 
     def initialize(io)
       @io = io
-      @io.set_encoding Encoding::ASCII_8BIT unless RUBY_VERSION =~ /^1\.8/
+      @io.set_encoding Encoding::ASCII_8BIT
       read_header!
       yield self if block_given?
     end
