@@ -1,21 +1,13 @@
 require 'mkmf'
 require 'fileutils'
 
-def patch_autogen
-  # s/libtoolize/glibtoolize/
-  File.write('autogen.sh', File.read('autogen.sh').gsub(/libtoolize/, 'glibtoolize'))
-end
-
 unless pkg_config('libsnappy') || have_library('snappy')
   # build vendor/snappy
   pwd = File.dirname File.expand_path __FILE__
   dir = File.join pwd, '..', 'vendor', 'snappy'
 
   Dir.chdir dir do
-    unless system './autogen.sh'
-      patch_autogen
-      raise '`autogen.sh` failed' unless system './autogen.sh'
-    end
+    raise '`autogen.sh` failed' unless system './autogen.sh'
     raise '`configure` failed'  unless system './configure --disable-option-checking --disable-dependency-tracking --disable-gtest --without-gflags'
   end
 
