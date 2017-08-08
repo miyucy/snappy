@@ -1,7 +1,26 @@
 language: ruby
+sudo: false
+cache:
+  bundler: true
+  directories:
+    - "$HOME/.ccache"
 rvm:
   - 1.9.3
   - 2.2
   - 2.3
   - 2.4
   - jruby-19mode
+env:
+  global:
+    - PATH="/usr/lib/ccache:$PATH"
+before_install:
+  - gem install bundler
+deploy:
+  provider: rubygems
+  api_key:
+    secure: Jwk5pSUD9dUb34fO4dLamqhQw9U/t/5pHX7l5LKE4e1MDlD9fq/KB/DFpRTSfA0s8XUu+NZYtRO+6GZBEBY5UjZyPcUk5izaQzMWANP6QEMI4mYheSFUXTGkimV8MFxo2Fp7itZBM9SsLccDp/59nmbhBUMdr4OECZtd1Igjz63AtRdD7JgZwhC2XqBVbcxyx78VcZH8r4JEZzpcnZjjGN9YwQFubhiPs0V2uTMp/kGSWeP4U3T71MrvRmDlu8QJTsTRsvhv+zDatFySzs2SGsn25+cUCOqWnb5vcwtCbfj7trY+DLO3FqZOvQlvDfvyOy9LlLRpovhu6w+L42Z2ZN5U1Ovz0bMjk5WGLlXRxCLTRqXihvJrtFuL/7B2YSXcWPBNt5HWFwtapEJDm+CJoKpqa/WB7gEgO+uAocHbRqbg64rnPLODOEH0xGeRNSXBA3P5JeVNYhvpFdX8LclRFaVpfYDDenzRV9zpIppMXSq3Suzw/nZPBL9cuuIsBYG6hnijhZertWIRjZqw8D/1wEBd6VT7cDQ+PsNBGKhvPBVd5Nb7Zh9YjwCv4BQHB6XekiKi7mGFN4X/6eTzudRYxG7KyrYqk9AQ6KmEv5U/Xv+Wcar86O49LtNqYykYKLknC9CiUwTDp4lkVD8D3LoIzkL2/AeZyI6NQso8tymB0CM=
+  gem: snappy
+  on:
+    tags: true
+    repo: miyucy/snappy
+script: bundle exec rake && ./smoke.sh
