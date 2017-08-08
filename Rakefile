@@ -15,30 +15,30 @@ if defined?(JRUBY_VERSION)
   directory 'ext/java/build'
 
   task :setup => 'ext/java/build' do
-    ant.property name: 'src.dir', value: 'ext/java/src'
-    ant.property name: 'build.dir', value: 'ext/java/build'
+    ant.property :name => 'src.dir', :value => 'ext/java/src'
+    ant.property :name => 'build.dir', :value => 'ext/java/build'
 
-    ant.path id: 'compile.class.path' do
-      pathelement location: File.join(RbConfig::CONFIG['prefix'], 'lib', 'jruby.jar')
+    ant.path :id => 'compile.class.path' do
+      pathelement :location => File.join(RbConfig::CONFIG['prefix'], 'lib', 'jruby.jar')
       $LOAD_PATH.flat_map { |path| Dir[File.join(path, '**', '*.jar')] }.each do |jar|
-        pathelement location: jar
+        pathelement :location => jar
       end
     end
   end
 
   desc 'Compile the extension'
   task :compile => :setup do
-    ant.javac destdir: '${build.dir}', includeantruntime: 'no', target: '1.6', source: '1.6', debug: 'on' do
-      classpath refid: 'compile.class.path'
-      src { pathelement location: '${src.dir}' }
+    ant.javac :destdir => '${build.dir}', :includeantruntime => 'no', :target => '1.6', :source => '1.6', :debug => 'on' do
+      classpath :refid => 'compile.class.path'
+      src { pathelement :location => '${src.dir}' }
     end
   end
 
   desc 'Package the jar'
   file 'lib/snappy_ext.jar' => :compile do |t|
-    ant.jar destfile: 'lib/snappy_ext.jar', basedir: '${build.dir}' do
-      ant.fileset dir: '${build.dir}', includes: 'snappy/*.class'
-      ant.fileset dir: '${build.dir}', includes: 'SnappyExtLibraryService.class'
+    ant.jar :destfile => 'lib/snappy_ext.jar', :basedir => '${build.dir}' do
+      ant.fileset :dir => '${build.dir}', :includes => 'snappy/*.class'
+      ant.fileset :dir => '${build.dir}', :includes => 'SnappyExtLibraryService.class'
     end
   end
 
@@ -52,7 +52,6 @@ else
     end
     cp "ext/snappy_ext.#{DLEXT}", "lib/snappy_ext.#{DLEXT}"
   end
-
 
   task :test => "ext/snappy_ext.#{DLEXT}"
 end
