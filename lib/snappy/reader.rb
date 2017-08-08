@@ -1,10 +1,14 @@
+# frozen_string_literal: true
+
+require 'snappy/shim'
+require 'snappy/writer'
+
 module Snappy
   class Reader
     attr_reader :io, :magic, :default_version, :minimum_compatible_version
 
     def initialize(io)
-      @io = io
-      @io.set_encoding Encoding::ASCII_8BIT unless RUBY_VERSION =~ /^1\.8/
+      @io = Snappy.set_encoding io
       read_header!
       yield self if block_given?
     end
@@ -28,7 +32,7 @@ module Snappy
       @buff.string
     end
 
-    def each_line(sep_string=$/)
+    def each_line(sep_string = $/)
       last = ""
       each do |chunk|
         chunk = last + chunk
