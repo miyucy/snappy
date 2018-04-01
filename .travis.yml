@@ -9,12 +9,17 @@ rvm:
   - 2.2
   - 2.3
   - 2.4
+  - 2.5
   - jruby-19mode
 env:
   global:
     - PATH="/usr/lib/ccache:$PATH"
 before_install:
   - gem install bundler
+addons:
+  apt:
+    packages:
+      - cmake
 deploy:
   provider: rubygems
   api_key:
