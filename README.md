@@ -4,13 +4,27 @@ see https://github.com/google/snappy
 
 ## Preparation
 
-Use libsnappy
 
-    $ brew install snappy
+### macOS
 
-Or
+```bash
+$ brew install snappy
+$ brew install autoconf automake libtool
+```
 
-    $ brew install autoconf automake libtool
+### Ubuntu
+
+```bash
+$ apt-get install libsnappy-dev -y
+$ apt-get install libtool automake autoconf -y
+```
+
+### Alpine
+
+```bash
+$ apk install snappy
+$ apk install build-base libexecinfo automake autoconf libtool
+```
 
 ## Installation
 
