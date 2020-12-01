@@ -42,6 +42,7 @@ Or install it yourself as:
 
 ## Usage
 
+Snappy-java format
 ```ruby
 require 'snappy'
 
@@ -49,6 +50,15 @@ Snappy.deflate(source)
 # => Compressed data
 
 Snappy.inflate(source)
+# => Decompressed data
+```
+
+Hadoop-snappy format
+```ruby
+Snappy::Hadoop.deflate(source)
+# => Compressed data
+
+Snappy::Hadoop.inflate(source)
 # => Decompressed data
 ```
 
