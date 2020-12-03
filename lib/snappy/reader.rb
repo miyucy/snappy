@@ -19,17 +19,17 @@ module Snappy
           size = @io.read(4).unpack('N').first
           yield Snappy.inflate(@io.read(size)) if block_given?
         else
-          yield Snappy.inflate @io.read if block_given?
+          yield Snappy.inflate(@io.read) if block_given?
         end
       end
     end
 
     def read
-      @buff = StringIO.new
+      buff = StringIO.new
       each do |chunk|
-        @buff << chunk
+        buff << chunk
       end
-      @buff.string
+      buff.string
     end
 
     def each_line(sep_string = $/)

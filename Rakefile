@@ -5,6 +5,7 @@ require "rbconfig"
 DLEXT = RbConfig::CONFIG['DLEXT']
 
 Rake::TestTask.new do |t|
+  t.pattern = 'test/**/test-*.rb'
   t.warning = true
   t.verbose = true
 end
