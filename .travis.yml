@@ -15,7 +15,7 @@ env:
   global:
     - PATH="/usr/lib/ccache:$PATH"
 before_install:
-  - gem install bundler
+  - travis_retry gem install bundler --no-document -v 1.16.1
 addons:
   apt:
     packages:
