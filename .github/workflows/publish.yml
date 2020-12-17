@@ -1,0 +1,31 @@
+name: Publish Gem
+
+on:
+  push:
+    branches:
+      - use-actions
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
+        bundler-cache: true
+    - run: |
+        mkdir -p ~/.gem
+        echo '---' > ~/.gem/credentials
+        echo ':github: Bearer ${{secrets.GITHUB_TOKEN}}' >> ~/.gem/credentials
+        echo ':rubygems_api_key: ${{secrets.RUBYGEMS_API_KEY}}' >> ~/.gem/credentials
+        chmod 600 ~/.gem/credentials
+    - name: Run the default task
+      run: |
+        if [ -f ~/.gem/credentials ]; then
+          bundle exec rake release[remote]
+        fi
+    - run: |
+        rm -f ~/.gem/credentials
