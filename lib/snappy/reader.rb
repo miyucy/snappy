@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'snappy/shim'
-require 'snappy/writer'
+require "snappy/shim"
+require "snappy/writer"
 
 module Snappy
   class Reader
@@ -14,12 +14,14 @@ module Snappy
     end
 
     def each
+      return to_enum unless block_given?
+
       until @io.eof?
         if @chunked
-          size = @io.read(4).unpack('N').first
-          yield Snappy.inflate(@io.read(size)) if block_given?
+          size = @io.read(4).unpack1("N")
+          yield Snappy.inflate(@io.read(size))
         else
-          yield Snappy.inflate(@io.read) if block_given?
+          yield Snappy.inflate(@io.read)
         end
       end
     end
@@ -33,13 +35,15 @@ module Snappy
     end
 
     def each_line(sep_string = $/)
+      return to_enum(:each_line, sep_string) unless block_given?
+
       last = ""
       each do |chunk|
         chunk = last + chunk
         lines = chunk.split(sep_string)
         last = lines.pop
         lines.each do |line|
-          yield line if block_given?
+          yield line
         end
       end
       yield last
@@ -50,7 +54,7 @@ module Snappy
     def read_header!
       header = @io.read Snappy::Writer::MAGIC.length
       if header.length == Snappy::Writer::MAGIC.length && header == Snappy::Writer::MAGIC
-        @magic, @default_version, @minimum_compatible_version = header, *@io.read(8).unpack('NN')
+        @magic, @default_version, @minimum_compatible_version = header, *@io.read(8).unpack("NN")
         @chunked = true
       else
         @io.rewind

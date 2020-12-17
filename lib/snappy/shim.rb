@@ -3,7 +3,7 @@
 module Snappy
   module_function
 
-  if RUBY_VERSION[0..2] == '1.8'
+  if RUBY_VERSION[0..2] == "1.8"
     def set_encoding(io)
       io
     end

@@ -83,6 +83,16 @@ class SnappyReaderTest < Test::Unit::TestCase
       end
       assert_equal %w[foobar bazquux], chunks
     end
+
+    test "should return enumerator w/o block" do
+      eacher = subject.each
+      assert_instance_of Enumerator, eacher
+      chunks = []
+      chunks << eacher.next
+      chunks << eacher.next
+      assert_raise(StopIteration) { eacher.next }
+      assert_equal %w[foobar bazquux], chunks
+    end
   end
 
   sub_test_case "#read" do
@@ -110,6 +120,29 @@ class SnappyReaderTest < Test::Unit::TestCase
         lines << line
       end
       assert_equal %w[foo barbaz quux], lines
+    end
+
+    test "should return enumerator w/o block" do
+      eacher = subject.each_line
+      assert_instance_of Enumerator, eacher
+      lines = []
+      loop { lines << eacher.next }
+      assert_equal %w[foo barbaz quux], lines
+    end
+
+    test "each_line split by sep_string" do
+      buffer = StringIO.new
+      Snappy::Writer.new buffer do |w|
+        w << %w[a b c].join(",")
+        w.dump!
+        w << %w[d e f].join(",")
+      end
+      buffer.rewind
+      reader = Snappy::Reader.new buffer
+      eacher = reader.each_line(",")
+      lines = []
+      loop { lines << eacher.next }
+      assert_equal %w[a b cd e f], lines
     end
   end
 end

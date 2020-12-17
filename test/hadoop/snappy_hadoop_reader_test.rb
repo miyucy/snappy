@@ -88,5 +88,28 @@ class SnappyHadoopReaderTest < Test::Unit::TestCase
       end
       assert_equal %w[foo barbaz quux], lines
     end
+
+    test "should return enumerator w/o block" do
+      eacher = subject.each_line
+      assert_instance_of Enumerator, eacher
+      lines = []
+      loop { lines << eacher.next }
+      assert_equal %w[foo barbaz quux], lines
+    end
+
+    test "each_line split by sep_string" do
+      buffer = StringIO.new
+      Snappy::Hadoop::Writer.new buffer do |w|
+        w << %w[a b c].join(",")
+        w.dump!
+        w << %w[d e f].join(",")
+      end
+      buffer.rewind
+      reader = Snappy::Hadoop::Reader.new buffer
+      eacher = reader.each_line(",")
+      lines = []
+      loop { lines << eacher.next }
+      assert_equal %w[a b cd e f], lines
+    end
   end
 end
