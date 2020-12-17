@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in snappy.gemspec
 gemspec
 
-group :development do
-  gem 'rake'
-  gem 'minitest'
-end
+gem "rake", "~> 13.0"
+gem "test-unit", "~> 3.0"
+gem "test-unit-rr"

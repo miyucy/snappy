@@ -1,0 +1,36 @@
+name: Publish Gem
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [2.7, jruby]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Run release task
+      run: |
+        mkdir -p ~/.gem
+        cat << EOF > ~/.gem/credentials
+        ---
+        :github: Bearer ${{secrets.GITHUB_TOKEN}}
+        :rubygems_api_key: ${{secrets.RUBYGEMS_API_KEY}}
+        EOF
+        chmod 600 ~/.gem/credentials
+        bundle exec rake release[remote]
+        rm -f ~/.gem/credentials
