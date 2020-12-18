@@ -14,6 +14,8 @@ module Snappy
       end
 
       def each
+        return to_enum unless block_given?
+
         until @io.eof?
           # Uncompressed size (32 bit integer, BE).
           uncompressed_size = @io.read(4).unpack('N').first
@@ -29,7 +31,7 @@ module Snappy
             raise RuntimeError("Invalid data: expected #{uncompressed_size} bytes, got #{Uncompressed.size}")
           end
 
-          yield uncompressed_block_io.string if block_given?
+          yield uncompressed_block_io.string
         end
       end
 
@@ -42,13 +44,15 @@ module Snappy
       end
 
       def each_line(sep_string = $/)
+        return to_enum(:each_line, sep_string) unless block_given?
+
         last = ""
         each do |chunk|
           chunk = last + chunk
           lines = chunk.split(sep_string)
           last = lines.pop
           lines.each do |line|
-            yield line if block_given?
+            yield line
           end
         end
         yield last
