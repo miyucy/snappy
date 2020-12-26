@@ -1,6 +1,6 @@
 name: Ruby
 
-on: [push,pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -20,4 +20,15 @@ jobs:
         bundler-cache: true
     - name: Run the default task
       run: |
-        bundle exec rake
+        bundle exec rake test build
+        gem install --no-document "$(ls pkg/snappy-*.gem)"
+        cat <<EOF | ruby
+        require "snappy"
+        if Snappy.inflate(Snappy.deflate(File.read("README.md"))) == File.read("README.md")
+          puts "OK"
+          exit 0
+        else
+          puts "NG"
+          exit 0
+        end
+        EOF
