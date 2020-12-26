@@ -1,7 +1,6 @@
 #include "ruby.h"
 #include "snappy-c.h"
 
-static VALUE rb_mSnappy;
 static VALUE rb_eSnappy;
 
 static VALUE
@@ -92,10 +91,12 @@ snappy_valid_p(VALUE self, VALUE str)
 
 void Init_snappy_ext()
 {
+    VALUE rb_mSnappy;
     VALUE rb_mSnappy_singleton;
 
     rb_mSnappy = rb_define_module("Snappy");
     rb_eSnappy = rb_define_class_under(rb_mSnappy, "Error", rb_eStandardError);
+    rb_global_variable(&rb_eSnappy);
     rb_define_singleton_method(rb_mSnappy, "deflate", snappy_deflate, -1);
     rb_define_singleton_method(rb_mSnappy, "inflate", snappy_inflate, -1);
     rb_define_singleton_method(rb_mSnappy, "valid?",  snappy_valid_p, 1);
