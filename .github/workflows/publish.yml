@@ -2,8 +2,6 @@ name: Publish Gem
 
 on:
   push:
-    branches:
-      - master
     tags:
       - 'v*'
 
