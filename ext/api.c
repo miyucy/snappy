@@ -91,6 +91,10 @@ snappy_valid_p(VALUE self, VALUE str)
 
 void Init_snappy_ext()
 {
+#if HAVE_RB_EXT_RACTOR_SAFE
+    rb_ext_ractor_safe(true);
+#endif
+
     VALUE rb_mSnappy;
     VALUE rb_mSnappy_singleton;
 
