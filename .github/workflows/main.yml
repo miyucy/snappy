@@ -20,7 +20,7 @@ jobs:
         bundler-cache: true
     - name: Run the default task
       run: |
-        bundle exec rake test build
+        bundle exec rake clobber clean test build
         gem install --no-document "$(ls pkg/snappy-*.gem)"
         cat <<EOF | ruby
         require "snappy"
