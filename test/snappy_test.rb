@@ -76,4 +76,20 @@ class SnappyTest < Test::Unit::TestCase
       assert_false Snappy.valid?(d)
     end
   end
+
+  sub_test_case "Ractor safe" do
+    test "able to invoke non-main ractor" do
+      unless defined? ::Ractor
+        notify "Ractor not defined"
+        omit
+      end
+      s = random_data
+      a = Array.new(2) do
+        Ractor.new(s) do |s|
+          Snappy.inflate(Snappy.deflate(s)) == s
+        end
+      end
+      assert_equal [true, true], a.map(&:take)
+    end
+  end
 end
