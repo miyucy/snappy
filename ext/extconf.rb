@@ -1,6 +1,8 @@
 require 'mkmf'
 require 'fileutils'
 
+$CXXFLAGS += " -std=c++11 "
+
 unless pkg_config('libsnappy') || have_library('snappy')
   # build vendor/snappy
   pwd = File.dirname File.expand_path __FILE__
@@ -9,7 +11,7 @@ unless pkg_config('libsnappy') || have_library('snappy')
   Dir.chdir(dir) do
     FileUtils.mkdir_p 'build'
     Dir.chdir(File.join(dir, 'build')) do
-      `cmake .. -DCMAKE_BUILD_TYPE=Release`
+      `cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"`
     end
   end
 
