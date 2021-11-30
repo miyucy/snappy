@@ -11,7 +11,7 @@ unless pkg_config('libsnappy') || have_library('snappy')
   Dir.chdir(dir) do
     FileUtils.mkdir_p 'build'
     Dir.chdir(File.join(dir, 'build')) do
-      `cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"`
+      `cmake .. -DCMAKE_BUILD_TYPE=Release`
     end
   end
 
