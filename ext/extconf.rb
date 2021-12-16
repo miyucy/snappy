@@ -1,6 +1,8 @@
 require 'mkmf'
 require 'fileutils'
 
+$CXXFLAGS += " -std=c++11 "
+
 unless pkg_config('libsnappy') || have_library('snappy')
   # build vendor/snappy
   pwd = File.dirname File.expand_path __FILE__
