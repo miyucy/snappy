@@ -22,3 +22,4 @@ ext/*.o
 ext/*.log
 ext/snappy*
 ext/java/build
+vendor/bundle
