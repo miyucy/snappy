@@ -26,6 +26,22 @@ $ apk install snappy
 $ apk install build-base libexecinfo automake autoconf libtool
 ```
 
+### Windows
+
+[Ruby Installer](https://rubyinstaller.org/) 3.0 and earlier:
+
+```bash
+(in MSYS2 shell)
+$ pacman -S mingw-w64-x86_64-snappy
+```
+
+Ruby Installer 3.1 and later:
+
+```bash
+(in MSYS2 shell)
+pacman -S mingw-w64-ucrt-x86_64-snappy
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
