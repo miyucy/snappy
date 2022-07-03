@@ -9,7 +9,7 @@ see https://github.com/google/snappy
 
 ```bash
 $ brew install snappy
-$ brew install autoconf automake libtool
+$ brew install autoconf automake cmake libtool
 ```
 
 ### Ubuntu
