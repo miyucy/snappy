@@ -32,5 +32,6 @@ Gem::Specification.new do |spec|
     spec.add_dependency "snappy-jars", "~> 1.1.0"
   else
     spec.extensions = ["ext/extconf.rb"]
+    spec.metadata['msys2_mingw_dependencies'] = 'snappy'
   end
 end
