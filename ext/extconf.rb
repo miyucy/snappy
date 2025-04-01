@@ -13,7 +13,7 @@ unless have_libsnappy
     FileUtils.rm_rf "build"
     FileUtils.mkdir_p "build"
     Dir.chdir(File.join(dir, "build")) do
-      `cmake .. -DCMAKE_BUILD_TYPE=Release -DSNAPPY_BUILD_TESTS=OFF -DSNAPPY_BUILD_BENCHMARKS=OFF`
+      `cmake .. -DCMAKE_BUILD_TYPE=Release -DSNAPPY_BUILD_TESTS=OFF -DSNAPPY_BUILD_BENCHMARKS=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
     end
   end
 
