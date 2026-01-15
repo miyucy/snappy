@@ -10,6 +10,9 @@ see https://github.com/google/snappy
 ```bash
 $ brew install snappy
 $ brew install autoconf automake cmake libtool
+
+# This step may be needed if gem installation fails
+bundle config build.snappy --with-snappy-dir=/opt/homebrew/opt/snappy
 ```
 
 ### Ubuntu
