@@ -31,7 +31,7 @@ if defined?(JRUBY_VERSION)
 
   desc "Compile the extension"
   task compile: :setup do
-    ant.javac destdir: "${build.dir}", includeantruntime: "no", target: "1.6", source: "1.6", debug: "on" do
+    ant.javac destdir: "${build.dir}", includeantruntime: "no", target: "1.8", source: "1.8", debug: "on" do
       classpath refid: "compile.class.path"
       src { pathelement location: "${src.dir}" }
     end
