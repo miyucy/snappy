@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "securerandom"
 
 class SnappyTest < Test::Unit::TestCase
-  T = [*"a".."z", *"A".."Z", *"0".."9"].freeze
-
   def random_data(length = 1024)
-    Array.new(length) { T.sample }.join
+    SecureRandom.alphanumeric(length)
   end
 
   test "VERSION" do
@@ -17,6 +16,11 @@ class SnappyTest < Test::Unit::TestCase
 
   test "well done" do
     s = random_data
+    assert_equal s, Snappy.inflate(Snappy.deflate(s))
+  end
+
+  test "binary data" do
+    s = SecureRandom.random_bytes(1024)
     assert_equal s, Snappy.inflate(Snappy.deflate(s))
   end
 
@@ -83,13 +87,34 @@ class SnappyTest < Test::Unit::TestCase
         notify "Ractor not defined"
         omit
       end
+      unless RUBY_VERSION.start_with?("4")
+        omit
+      end
       s = random_data
       a = Array.new(2) do
         Ractor.new(s) do |s|
           Snappy.inflate(Snappy.deflate(s)) == s
         end
       end
-      assert_equal [true, true], a.map(&:take)
+      assert_equal [true, true], a.map(&:value)
+    end
+
+    test "take2" do
+      unless defined? ::Ractor
+        notify "Ractor not defined"
+        omit
+      end
+      unless RUBY_VERSION.start_with?("4")
+        omit
+      end
+      s = random_data
+      i = Ractor.new(s) do |s|
+        Snappy.deflate(s)
+      end.value
+      j = Ractor.new(i) do |i|
+        Snappy.inflate(i)
+      end.value
+      assert_equal s, j
     end
   end
 end
