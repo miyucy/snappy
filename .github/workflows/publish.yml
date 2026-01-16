@@ -10,8 +10,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [3.2, jruby]
+        ruby: [4.0, jruby]
+    if: github.repository == 'miyucy/snappy'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
     - uses: actions/checkout@v4
       with:
@@ -21,14 +25,4 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run release task
-      run: |
-        mkdir -p ~/.gem
-        cat << EOF > ~/.gem/credentials
-        ---
-        :github: Bearer ${{secrets.GITHUB_TOKEN}}
-        :rubygems_api_key: ${{secrets.RUBYGEMS_API_KEY}}
-        EOF
-        chmod 600 ~/.gem/credentials
-        bundle exec rake release[remote]
-        rm -f ~/.gem/credentials
+    - uses: rubygems/release-gem@v1
