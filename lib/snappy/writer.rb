@@ -4,7 +4,7 @@ require 'snappy/shim'
 
 module Snappy
   class Writer
-    MAGIC = Snappy.b("\x82SNAPPY\x0")
+    MAGIC = "\x82SNAPPY\x0".b
     DEFAULT_VERSION = 1
     MINIMUM_COMPATIBLE_VERSION = 1
     DEFAULT_BLOCK_SIZE = 32 * 1024
