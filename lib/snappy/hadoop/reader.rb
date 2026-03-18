@@ -28,7 +28,7 @@ module Snappy
           end
 
           if uncompressed_block_io.size > uncompressed_size
-            raise RuntimeError("Invalid data: expected #{uncompressed_size} bytes, got #{Uncompressed.size}")
+            raise RuntimeError("Invalid data: expected #{uncompressed_size} bytes, got #{uncompressed_block_io.size}")
           end
 
           yield uncompressed_block_io.string
