@@ -59,6 +59,23 @@ class SnappyTest < Test::Unit::TestCase
       r = Snappy.inflate(s, d)
       assert_equal r.object_id, d.object_id
     end
+
+    test "reject a header that claims more than the input can expand to" do
+      if defined? JRUBY_VERSION
+        notify "cannot pass buffer in jruby"
+        omit
+      end
+      # varint header claiming 0xFFFFFFFF bytes, with no elements behind it
+      s = "\xFF\xFF\xFF\xFF\x0F".b
+      d = +""
+      assert_raise(Snappy::Error) { Snappy.inflate(s, d) }
+      assert_equal 0, d.bytesize
+    end
+
+    test "inflate data compressed at the maximum ratio" do
+      s = "\0" * (1024 * 1024)
+      assert_equal s, Snappy.inflate(Snappy.deflate(s))
+    end
   end
 
   sub_test_case ".valid?" do
