@@ -1,6 +1,8 @@
 #include "ruby.h"
 #include "snappy-c.h"
 
+#define SNAPPY_MAX_EXPANSION 22
+
 static VALUE rb_eSnappy;
 
 static VALUE
@@ -57,6 +59,13 @@ snappy_inflate(int argc, VALUE *argv, VALUE self)
     result = snappy_uncompressed_length(RSTRING_PTR(src), RSTRING_LEN(src), &output_length);
     if (result != SNAPPY_OK) {
         return snappy_raise(result);
+    }
+
+    /* The header is untrusted. No element expands by more than 64/3
+     * (a 3-byte copy of 64 bytes), so a larger claim cannot be valid and
+     * must not decide the allocation size. */
+    if (output_length / SNAPPY_MAX_EXPANSION > (size_t)RSTRING_LEN(src)) {
+        return snappy_raise(SNAPPY_INVALID_INPUT);
     }
 
     if (NIL_P(dst)) {
