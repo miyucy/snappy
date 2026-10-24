@@ -21,7 +21,8 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0")
   spec.files        -= spec.test_files
   spec.files        -= ["vendor/snappy"]
-  spec.files        += Dir["vendor/snappy/**/*"].reject { |e| e.start_with? "vendor/snappy/testdata" }
+  # third_party is only for snappy's own tests/benchmarks, and build is cmake output left by extconf.rb
+  spec.files        += Dir["vendor/snappy/**/*"].reject { |e| e.start_with?(*%w[testdata third_party build].map { |d| "vendor/snappy/#{d}" }) }
 
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
